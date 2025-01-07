@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
+/* Add this CSS in your global styles or a specific component style file */
+
+ul {
+  list-style-type: disc; /* Show bullets as circles */
+  padding-left: 1.5rem; /* Ensure there's space on the left */
+}
+
+ol {
+  list-style-type: decimal; /* Show numbers for ordered lists */
+  padding-left: 5 rem; /* Ensure there's space on the left */
+}
+
+li {
+  margin-bottom: 0.5 rem; /* Add some space between list items */
+}
