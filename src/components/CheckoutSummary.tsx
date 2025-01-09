@@ -6,24 +6,6 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { FaSpinner } from "react-icons/fa";
 
-const OPENCAGE_API_KEY = "4fa04ade57694ff799098c2aadeec3c8";
-
-const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
-  const toRadians = (degree: number) => (degree * Math.PI) / 180;
-  const R = 3958.8;
-
-  const dLat = toRadians(lat2 - lat1);
-  const dLon = toRadians(lon2 - lon1);
-
-  const a =
-    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
-    Math.cos(toRadians(lat1)) * Math.cos(toRadians(lat2)) *
-    Math.sin(dLon / 2) * Math.sin(dLon / 2);
-
-  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-  return R * c;
-};
-
 const CheckoutSummary: React.FC = () => {
   const navigate = useNavigate();
   const { userId, cartId, token } = useContext(AuthContext);
@@ -31,7 +13,6 @@ const CheckoutSummary: React.FC = () => {
   const [selectedDeliveryMethod, setSelectedDeliveryMethod] = useState("Standard");
   const [promoCode, setPromoCode] = useState("");
   const [deliveryCharge, setDeliveryCharge] = useState<number | null>(null);
-  const [distance, setDistance] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [offerCases, setOfferCases] = useState<number>(0); // Added state for offer cases
   const [shippingAddress, setShippingAddress] = useState<any>(null);
@@ -49,26 +30,6 @@ const CheckoutSummary: React.FC = () => {
     }
   }, [cartId, userId]);
 
-  const fetchCoordinates = async (address: string) => {
-    try {
-      const response = await axiosInstance.get("https://api.opencagedata.com/geocode/v1/json", {
-        params: {
-          q: address,
-          key: OPENCAGE_API_KEY,
-        },
-      });
-      if (response.data.results.length === 0) {
-        throw new Error("No results found for the given address.");
-      }
-      const { lat, lng } = response.data.results[0].geometry;
-      return { lat, lng };
-    } catch (error) {
-      console.error("Error fetching coordinates:", error);
-      toast.error("Failed to fetch coordinates for address.");
-      return { lat: 0, lng: 0 };
-    }
-  };
-
   const fetchShippingAddress = async () => {
     try {
       const response = await axiosInstance.get(`v1/shipping/${cartId}/`, {
@@ -77,47 +38,10 @@ const CheckoutSummary: React.FC = () => {
         },
       });
       setShippingAddress(response.data);
-      calculateDeliveryCharge(response.data);
+      // We no longer calculate the delivery charge based on the address.
     } catch (error: any) {
       console.error("Error fetching shipping address:", error);
       toast.error("Failed to fetch shipping address.");
-    }
-  };
-
-  const calculateDeliveryCharge = async (address: any) => {
-    try {
-      const storeAddress = "76111 Haltom City, Dallas, TX";
-      const customerAddress = `${address.address}, ${address.city}, ${address.state}, ${address.postal_code}`;
-
-      const storeCoords = await fetchCoordinates(storeAddress);
-      const customerCoords = await fetchCoordinates(customerAddress);
-
-      const calculatedDistance = calculateDistance(
-        storeCoords.lat,
-        storeCoords.lng,
-        customerCoords.lat,
-        customerCoords.lng
-      );
-
-      setDistance(calculatedDistance);
-
-      let charge = 0;
-      if (calculatedDistance <= 10) {
-        charge = 15;
-      } else if (calculatedDistance <= 20) {
-        charge = 30;
-      } else if (calculatedDistance <= 30) {
-        charge = 45;
-      } else if (calculatedDistance <= 50) {
-        charge = 70;
-      } else {
-        charge = 100;
-      }
-
-      setDeliveryCharge(charge);
-    } catch (error) {
-      console.error("Error calculating delivery charge:", error);
-      toast.error("Failed to calculate delivery charge.");
     }
   };
 
@@ -149,12 +73,26 @@ const CheckoutSummary: React.FC = () => {
       setCartItems(cartItemsData);
       setOfferCases(cartData.free_cases || 0); // Set offerCases from cart data
       setIsCartFetched(true);
+      calculateDeliveryCharge(cartItemsData); // Calculate the delivery charge when items are fetched
     } catch (err) {
       console.error("Error fetching cart items:", err);
       toast.error("Failed to fetch cart items.");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const calculateDeliveryCharge = (cartItems: any[]) => {
+    const totalQuantity = cartItems.reduce((total, item) => total + item.quantity, 0);
+
+    let charge = 0;
+    if (totalQuantity >= 25) {
+      charge = 0;
+    } else {
+      charge = 19.99;
+    }
+
+    setDeliveryCharge(charge); // Update the delivery charge state
   };
 
   const handleDeliveryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,6 +145,11 @@ const CheckoutSummary: React.FC = () => {
     }
   };
 
+  const calculateTotalAmount = () => {
+    const subtotal = cartItems.reduce((total, item) => total + item.totalPrice, 0);
+    return (subtotal + (deliveryCharge || 0)).toFixed(2);
+  };
+
   if (!cartId || !userId) {
     return <p>Missing cart or user information.</p>;
   }
@@ -250,7 +193,7 @@ const CheckoutSummary: React.FC = () => {
                       className="form-radio text-blue-600 mr-4"
                     />
                     <span className="text-gray-800">Standard Delivery</span>
-                    <p className="text-sm text-gray-500">Based on provided distance</p>
+                    <p className="text-sm text-gray-500">Based on total quantity of items</p>
                   </div>
                   <span className="font-bold text-gray-800">
                     ${deliveryCharge !== null ? deliveryCharge.toFixed(2) : "Calculating..."}
@@ -300,29 +243,6 @@ const CheckoutSummary: React.FC = () => {
               </div>
             )}
 
-            <div className="mb-6">
-              <label htmlFor="promoCode" className="text-sm font-medium text-gray-800 block mb-2">
-                Enter a Promo Code
-              </label>
-              <div className="flex">
-                <input
-                  type="text"
-                  id="promoCode"
-                  name="promoCode"
-                  value={promoCode}
-                  onChange={handlePromoCodeChange}
-                  className="w-full p-3 border border-gray-300 rounded-l-lg focus:outline-none"
-                />
-                <button
-                  onClick={handlePromoApply}
-                  type="button"
-                  className="px-4 py-2 bg-gray-300 text-gray-700 font-medium rounded-r-lg hover:bg-gray-400 transition"
-                >
-                  Apply
-                </button>
-              </div>
-            </div>
-
             <div className="border-t pt-6 space-y-2">
               <div className="flex justify-between">
                 <p className="text-sm text-gray-500">Subtotal:</p>
@@ -345,10 +265,7 @@ const CheckoutSummary: React.FC = () => {
                 <p>Total:</p>
                 <p>
                   $
-                  {(
-                    cartItems.reduce((total, item) => total + item.totalPrice, 0) +
-                    (deliveryCharge || 0)
-                  ).toFixed(2)}
+                  {calculateTotalAmount()}
                 </p>
               </div>
             </div>
@@ -364,4 +281,3 @@ const CheckoutSummary: React.FC = () => {
 };
 
 export default CheckoutSummary;
-

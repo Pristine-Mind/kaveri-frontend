@@ -132,20 +132,21 @@ const ProductAll: React.FC = () => {
                 )}
               </button>
 
-              {/* Product Image */}
+              {/* Product Image with Zoom effect */}
               <Link to={`/product/${product.id}`}>
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  // Removed h-48, changed to h-auto object-contain (or object-cover)
-                  className="w-full h-auto object-contain mb-4 rounded-md
-                             hover:opacity-80 transition-opacity duration-300"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = '/fallback-image.jpg';
-                  }}
-                />
+                <div className="w-full h-72 mb-4 overflow-hidden rounded-md relative group">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                    className="w-full h-full object-cover transition-transform duration-300 ease-in-out transform group-hover:scale-110"
+                    loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/fallback-image.jpg';  // Handle missing image
+                    }}
+                  />
+                </div>
               </Link>
+
 
               {/* Product Name */}
               <Link to={`/product/${product.id}`}>

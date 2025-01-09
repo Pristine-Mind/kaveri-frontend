@@ -4,12 +4,15 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
+import InputMask from 'react-input-mask';
+
 
 interface UserFormData {
   email: string;
   first_name: string;
   last_name: string;
   password: string;
+  confirm_password: string; // Added confirm_password
 }
 
 interface ProfileFormData {
@@ -32,6 +35,9 @@ const userSchema = Yup.object().shape({
   password: Yup.string()
     .min(6, 'Password must be at least 6 characters')
     .required('Password is required'),
+  confirm_password: Yup.string()
+    .oneOf([Yup.ref('password'), null], 'Passwords must match')
+    .required('Confirm Password is required'),
 });
 
 const profileSchema = Yup.object().shape({
@@ -45,8 +51,8 @@ const profileSchema = Yup.object().shape({
   business_phone: Yup.string()
     .required('Business phone is required')
     .matches(
-      /^\(?([0-9]{3})\)?[-.●]?([0-9]{3})[-.●]?([0-9]{4})$/,
-      'Invalid phone number format'
+      /^\+1\s\(\d{3}\)\s\d{3}-\d{4}$/,
+      'Invalid phone number format. Expected format: +1 (xxx) xxx-xxxx'
     ),
   license_number: Yup.string().required('License Number is required'),
 });
@@ -208,6 +214,30 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Confirm Password Field */}
+              <div>
+                <label
+                  htmlFor="confirm_password"
+                  className="block text-sm font-semibold text-gray-700"
+                >
+                  Confirm Password<span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="confirm_password"
+                  type="password"
+                  {...registerUser('confirm_password')}
+                  className={`w-full p-3 mt-1 border ${
+                    userErrors.confirm_password ? 'border-red-500' : 'border-gray-300'
+                  } rounded-md`}
+                />
+                {userErrors.confirm_password && (
+                  <span className="text-red-600 text-sm">
+                    {userErrors.confirm_password.message}
+                  </span>
+                )}
+              </div>
+              {/* End Confirm Password Field */}
+
               <div>
                 <button
                   type="submit"
@@ -322,20 +352,30 @@ const Register: React.FC = () => {
                 <label htmlFor="business_phone" className="block text-sm font-semibold text-gray-700">
                   Business Phone<span className="text-red-500">*</span>
                 </label>
-                <input
-                  id="business_phone"
-                  type="text"
+                <InputMask
+                  mask="+1 (999) 999-9999"
+                  maskChar=""
                   {...registerProfile('business_phone')}
-                  className={`w-full p-3 mt-1 border ${
-                    profileErrors.business_phone ? 'border-red-500' : 'border-gray-300'
-                  } rounded-md`}
-                />
+                >
+                  {(inputProps: any) => (
+                    <input
+                      {...inputProps}
+                      id="business_phone"
+                      type="text"
+                      placeholder="+1 (555) 555-5555"
+                      className={`w-full p-3 mt-1 border ${
+                        profileErrors.business_phone ? 'border-red-500' : 'border-gray-300'
+                      } rounded-md`}
+                    />
+                  )}
+                </InputMask>
                 {profileErrors.business_phone && (
                   <span className="text-red-600 text-sm">
                     {profileErrors.business_phone.message}
                   </span>
                 )}
               </div>
+
 
               <div>
                 <label htmlFor="license_number" className="block text-sm font-semibold text-gray-700">

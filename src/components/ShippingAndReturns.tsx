@@ -18,6 +18,15 @@ const ShippingAndReturns: React.FC = () => {
             loyalty among our customers.
           </p>
         </div>
+        <div className="bg-white p-8 rounded-lg shadow-md mb-8">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-4">Return Policy</h3>
+          <p className="text-gray-600 text-lg leading-relaxed">
+            We pride ourselves on the quality and integrity of the products and services we offer. As such, all sales are final, with no exceptions. This means we do not offer returns, exchanges, or refunds of any kind under any circumstances. We believe in empowering our customers to make informed purchasing decisions, and our team is always here to assist you prior to completing your order.
+          </p>
+          <p className="text-gray-600 text-lg leading-relaxed mt-4">
+            By placing an order with us, you acknowledge and accept our strict no-return policy. This ensures a seamless and efficient experience for all our valued customers. Thank you for understanding and supporting our commitment to providing exceptional value without compromising on transparency.
+          </p>
+        </div>
       </div>
     </div>
   );
