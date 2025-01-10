@@ -102,7 +102,7 @@ const Register: React.FC = () => {
 
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_REACT_APP_API_URL}/register`,
+        `${import.meta.env.VITE_REACT_APP_API_URL}/api/register`,
         finalData
       );
       console.log('Registration successful', response);
