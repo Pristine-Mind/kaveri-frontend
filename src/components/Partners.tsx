@@ -1,5 +1,6 @@
 import React from 'react';
 import { FaExternalLinkAlt } from 'react-icons/fa';
+import yeti from '../assets/yeti.jpg'
 
 interface Partner {
   name: string;
@@ -10,7 +11,7 @@ interface Partner {
 const partners: Partner[] = [
   {
     name: 'Yeti Brewery',
-    logo: 'https://scontent.fktm8-1.fna.fbcdn.net/v/t39.30808-6/294634203_719944572676597_1530116619516893142_n.jpg?_nc_cat=104&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=ggWLlGLW3x4Q7kNvgHWcEIA&_nc_oc=AdhSOi-FR0R2grOdWhGe4y8mby6uZA2NEpkixqjBLDvyCMzaRMh7pZi1BG2iNXV4txAcfE6JcdKXGW4OcVLpSQnS&_nc_zt=23&_nc_ht=scontent.fktm8-1.fna&_nc_gid=Ab6s56AQET7suzNpxnxD30W&oh=00_AYC5N7I3OXx1ikeg1gfjUGzWfxEuBwELzMmdjD70tCwzcQ&oe=677ED75D',
+    logo: yeti,
     website: 'https://yetibrewery.com/',
   },
   {

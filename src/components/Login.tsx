@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useAuth } from '../hooks/useAuth';
 import { toast } from 'react-toastify';
+import login from '../assets/login.jpg';
 
 const Login: React.FC = () => {
   const { setToken, setUserId } = useAuth();
@@ -54,7 +55,7 @@ const Login: React.FC = () => {
     <div
       className="min-h-screen flex items-center justify-center bg-cover bg-center"
       style={{
-        backgroundImage: 'url(https://scontent.fktm8-1.fna.fbcdn.net/v/t39.30808-6/300984598_1674044502970227_7362308765199212657_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=gOmsX5v19CEQ7kNvgE4p2db&_nc_oc=AdgpALYse5BbwJyJ3WnthBBkc7Bb4pcBhnpC2NDnISqtrGbjdCA1hkFFRiSEUOMWQfTkzv2GYhntvslhtn0f85yU&_nc_zt=23&_nc_ht=scontent.fktm8-1.fna&_nc_gid=AHEk5QWEvpNQ3RavNtNhbx1&oh=00_AYA16RVM_MduxtpLgw606W-gVM4XNr1ozB2X3omjjn_jqQ&oe=677D57CD)', // Replace with your background image URL
+        backgroundImage: `url(${login})`,
       }}
     >
       <div className="w-full max-w-sm bg-white bg-opacity-80 rounded-lg shadow-lg p-6">
