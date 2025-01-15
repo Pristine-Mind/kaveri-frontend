@@ -36,18 +36,18 @@ const ProductCategories: React.FC = () => {
     <div className="max-w-7xl mx-auto p-6">
       <h2 className="text-2xl font-semibold mb-6 text-center">Categories</h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {categories.map((category, index) => (
+        {categories.map((category) => (
           <div
             key={category.id}
-            className={`category-card ${gradients[index % gradients.length]} rounded-lg p-6 text-white shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:translate-y-2 hover:cursor-pointer flex flex-col items-center`}
+            className={`category-card rounded-lg p-6 text-white shadow-md transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl hover:translate-y-2 hover:cursor-pointer flex flex-col items-center bg-gray-200`}
             data-aos="fade-up"
           >
             <img
               src={category.image}
               alt={category.name}
-              className="w-40 h-40 object-cover mb-4 rounded-full border-4 border-white"
+              className="w-40 h-40 object-cover mb-4 border-4 border-white"
             />
-            <h3 className="text-center font-medium text-lg">{category.name}</h3>
+            <h3 className="text-center font-medium text-lg text-black">{category.name}</h3>
             {/* Optionally, you can display the description */}
             {/* <p className="text-center mt-2 text-sm">{category.description}</p> */}
           </div>
