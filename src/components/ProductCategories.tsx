@@ -25,12 +25,12 @@ const ProductCategories: React.FC = () => {
     });
   }, []);
 
-  const gradients = [
-    'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500',
-    'bg-gradient-to-r from-green-400 via-blue-500 to-teal-500',
-    'bg-gradient-to-r from-red-400 via-yellow-500 to-orange-500',
-    'bg-gradient-to-r from-indigo-400 via-pink-500 to-yellow-400',
-  ];
+  // const gradients = [
+  //   'bg-gradient-to-r from-blue-400 via-purple-500 to-pink-500',
+  //   'bg-gradient-to-r from-green-400 via-blue-500 to-teal-500',
+  //   'bg-gradient-to-r from-red-400 via-yellow-500 to-orange-500',
+  //   'bg-gradient-to-r from-indigo-400 via-pink-500 to-yellow-400',
+  // ];
 
   return (
     <div className="max-w-7xl mx-auto p-6">
