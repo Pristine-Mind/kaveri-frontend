@@ -158,8 +158,8 @@ const ProductList: React.FC = () => {
               />
             </div>
             <div className="flex justify-between text-sm mt-2">
-              <span>NPR {priceRange[0]}</span>
-              <span>NPR {priceRange[1]}</span>
+              <span>$ {priceRange[0]}</span>
+              <span>$ {priceRange[1]}</span>
             </div>
           </div>
         </aside>

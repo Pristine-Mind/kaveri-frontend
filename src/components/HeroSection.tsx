@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import hero from '../assets/banner.png';
 import offerImage from '../assets/offer-new.jpeg';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
-
+  const navigate = useNavigate();
+  
   const closeModal = () => {
     setShowModal(false);
   };
@@ -18,6 +20,7 @@ const HeroSection: React.FC = () => {
           <br />
           <button
             style={styles.shopNowButton}
+            onClick={() => navigate('/beers')}
             onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = '#d97706')}
             onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#fcd34d')}
           >
