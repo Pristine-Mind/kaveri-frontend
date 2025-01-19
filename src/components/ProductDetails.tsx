@@ -194,7 +194,7 @@ const ProductDetails: React.FC = () => {
               className="w-full py-2 rounded bg-orange-900 text-white"
               onClick={handleAddToCart}
             >
-              Pre Order
+              Add to Cart
             </button>
 
             <FaHeart
