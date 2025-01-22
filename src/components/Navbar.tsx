@@ -21,7 +21,7 @@ const Navbar: React.FC = () => {
           <NavItem title="Beer Club" href="/beer-club" />
           <NavItem title="Contact" href="/contact" />
           <NavItem title="Partners" href="/partners" />
-
+          <NavItem title="Stores" href="/stores" />
         </div>
       </div>
 
@@ -64,6 +64,7 @@ const Navbar: React.FC = () => {
         <NavItem title="Beer Club" href="/beer-club" />
         <NavItem title="Contact" href="/contact" />
         <NavItem title="Partners" href="/partners" />
+        <NavItem title="Stores" href="/stores" />
         <div className="w-full">
           <SearchBar />
         </div>

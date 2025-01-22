@@ -53,7 +53,7 @@ export const AxiosInterceptor: React.FC<AxiosInterceptorProps> = ({ children }) 
 
               return axiosInstance(originalRequest);
             } catch (refreshError: any) {
-              toast.error('Session expired. Please log in again.');
+              // toast.error('Session expired. Please log in again.');
               logout();
               return Promise.reject(refreshError);
             }

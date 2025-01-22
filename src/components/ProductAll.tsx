@@ -255,7 +255,7 @@ const ProductAll: React.FC = () => {
                   handleAddToCart(product.id, quantity[product.id] || 1)
                 }
               >
-                {product.stock_status ? 'Pre Order' : 'Sold Out'}
+                {product.stock_status ? 'Order Now' : 'Sold Out'}
               </button>
             </motion.div>
           );

@@ -25,6 +25,7 @@ import CheckoutSummary from './components/CheckoutSummary';
 import Profile from './components/Profile';
 import Partners from './components/Partners';
 import OrderConfirmation from './components/OrderConfirmation';
+import Store from './components/StoreLocationComponent'
 
 import AOS from 'aos';
 import 'aos/dist/aos.css';
@@ -37,7 +38,6 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import { AxiosInterceptor } from './api/axiosInstance';
 
-// <-- Import the AgeGateModal
 import AgeGateModal from './components/AgeGateModal';
 
 const App: React.FC = () => {
@@ -103,7 +103,7 @@ const App: React.FC = () => {
 
                     {/* Contact Us Route */}
                     <Route path="/contact" element={<ContactUs />} />
-
+                    <Route path="/stores" element={<Store />} />
                     {/* Register and Login Routes */}
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
@@ -167,10 +167,9 @@ const App: React.FC = () => {
                     <Route path="/store-policy" element={<StorePolicy />} />
                   </Routes>
                 </div>
-                <Footer />
               </>
             )}
-
+            <Footer />
             <ToastContainer />
           </Router>
         </WishlistProvider>

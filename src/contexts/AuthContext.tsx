@@ -50,7 +50,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('user_id');
     localStorage.removeItem('refreshToken');
     // console.log('User logged out and tokens removed.');
-    window.location.href = '/login';
+    // window.location.href = '/login';
   };
 
   return (
