@@ -49,6 +49,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     localStorage.removeItem('token');
     localStorage.removeItem('user_id');
     localStorage.removeItem('refreshToken');
+    localStorage.removeItem('ageVerified')
     // console.log('User logged out and tokens removed.');
     // window.location.href = '/login';
   };

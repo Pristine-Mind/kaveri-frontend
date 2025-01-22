@@ -53,16 +53,15 @@ const App: React.FC = () => {
     });
 
     // Check localStorage on mount to see if the user has verified their age before
-    const verified = localStorage.getItem('ageVerified');
-    if (verified === 'true') {
-      setIsAgeGateOpen(false);
-    }
+    // const verified = localStorage.getItem('ageVerified');
+    // if (verified === 'true') {
+    //   setIsAgeGateOpen(false);
+    // }
   }, []);
 
   // Callback to close the Age Gate modal once user is verified
   const handleAgeVerified = () => {
-    // Store in localStorage so it won't ask again on refresh
-    localStorage.setItem('ageVerified', 'true');
+    // localStorage.setItem('ageVerified', 'true');
     setIsAgeGateOpen(false);
   };
 
