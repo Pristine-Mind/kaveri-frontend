@@ -5,16 +5,18 @@ import { useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
 import InputMask from 'react-input-mask';
+import emailjs from '@emailjs/browser';
 
-
+// Define the structure of user form data
 interface UserFormData {
   email: string;
   first_name: string;
   last_name: string;
   password: string;
-  confirm_password: string; // Added confirm_password
+  confirm_password: string;
 }
 
+// Define the structure of profile form data
 interface ProfileFormData {
   business_name: string;
   business_address: string;
@@ -25,6 +27,7 @@ interface ProfileFormData {
   license_number: string;
 }
 
+// Combine user and profile data into a single type
 type RegistrationData = UserFormData & ProfileFormData;
 
 // Define Yup validation schemas
@@ -58,12 +61,14 @@ const profileSchema = Yup.object().shape({
 });
 
 const Register: React.FC = () => {
+  // State management for multi-step form
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
+  // Initialize react-hook-form for UserFormData with Yup validation
   const {
     register: registerUser,
     handleSubmit: handleSubmitUser,
@@ -73,6 +78,7 @@ const Register: React.FC = () => {
     mode: 'onBlur',
   });
 
+  // Initialize react-hook-form for ProfileFormData with Yup validation
   const {
     register: registerProfile,
     handleSubmit: handleSubmitProfile,
@@ -82,11 +88,37 @@ const Register: React.FC = () => {
     mode: 'onBlur',
   });
 
+  // State to store user data from Step 1
   const [userData, setUserData] = useState<UserFormData | null>(null);
 
+  // Handle submission of Step 1 (User Information)
   const onSubmitUser: SubmitHandler<UserFormData> = (data) => {
     setUserData(data);
     setStep(2);
+  };
+
+  /**
+   * Function to send confirmation email using EmailJS
+   * @param data - Combined registration data (user and profile)
+   */
+  const sendConfirmationEmail = async (data: RegistrationData) => {
+    const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+    const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+    const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+    // Define the parameters to be sent to the email template
+    const templateParams = {
+      to_email: data.email,
+      first_name: data.first_name,
+      business_name: data.business_name,
+    };
+
+    try {
+      await emailjs.send(serviceID, templateID, templateParams, publicKey);
+      console.log('Email sent successfully');
+    } catch (error) {
+      console.error('Failed to send email:', error);
+    }
   };
 
   const onSubmitProfile: SubmitHandler<ProfileFormData> = async (profileData) => {
@@ -106,6 +138,9 @@ const Register: React.FC = () => {
         finalData
       );
       console.log('Registration successful', response);
+
+      await sendConfirmationEmail(finalData);
+
       alert('Registration complete!');
       setShowPopup(true);
     } catch (error) {
@@ -131,21 +166,26 @@ const Register: React.FC = () => {
         backgroundPosition: 'center',
       }}
     >
+      {/* Overlay to darken the background image */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
+      {/* Registration Form Container */}
       <div className="relative max-w-6xl w-full bg-white rounded-lg shadow-lg overflow-hidden flex flex-col lg:flex-row">
+        {/* Form Section */}
         <div className="w-full lg:w-1/2 p-8 lg:p-12">
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             {step === 1 ? 'Register (Step 1)' : 'Register (Step 2)'}
           </h2>
 
+          {/* Display Error Message if any */}
           {errorMessage && (
             <div className="text-red-600 mb-4 text-center">{errorMessage}</div>
           )}
 
-          {/* STEP 1 */}
+          {/* STEP 1: User Information */}
           {step === 1 && (
             <form onSubmit={handleSubmitUser(onSubmitUser)} className="space-y-6">
+              {/* Email Field */}
               <div>
                 <label htmlFor="email" className="block text-sm font-semibold text-gray-700">
                   Email<span className="text-red-500">*</span>
@@ -163,6 +203,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* First Name Field */}
               <div>
                 <label htmlFor="first_name" className="block text-sm font-semibold text-gray-700">
                   First Name<span className="text-red-500">*</span>
@@ -180,6 +221,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Last Name Field */}
               <div>
                 <label htmlFor="last_name" className="block text-sm font-semibold text-gray-700">
                   Last Name<span className="text-red-500">*</span>
@@ -197,6 +239,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Password Field */}
               <div>
                 <label htmlFor="password" className="block text-sm font-semibold text-gray-700">
                   Password<span className="text-red-500">*</span>
@@ -236,8 +279,8 @@ const Register: React.FC = () => {
                   </span>
                 )}
               </div>
-              {/* End Confirm Password Field */}
 
+              {/* Submit Button */}
               <div>
                 <button
                   type="submit"
@@ -249,9 +292,10 @@ const Register: React.FC = () => {
             </form>
           )}
 
-          {/* STEP 2 */}
+          {/* STEP 2: Business Profile */}
           {step === 2 && (
             <form onSubmit={handleSubmitProfile(onSubmitProfile)} className="space-y-6">
+              {/* Business Name Field */}
               <div>
                 <label htmlFor="business_name" className="block text-sm font-semibold text-gray-700">
                   Business Name<span className="text-red-500">*</span>
@@ -271,6 +315,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Business Address Field */}
               <div>
                 <label htmlFor="business_address" className="block text-sm font-semibold text-gray-700">
                   Business Address<span className="text-red-500">*</span>
@@ -290,6 +335,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Business City Field */}
               <div>
                 <label htmlFor="business_city" className="block text-sm font-semibold text-gray-700">
                   City<span className="text-red-500">*</span>
@@ -309,7 +355,9 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Business State and ZIP Fields */}
               <div className="flex space-x-2">
+                {/* State Field */}
                 <div className="w-1/2">
                   <label htmlFor="business_state" className="block text-sm font-semibold text-gray-700">
                     State<span className="text-red-500">*</span>
@@ -328,6 +376,8 @@ const Register: React.FC = () => {
                     </span>
                   )}
                 </div>
+
+                {/* ZIP Field */}
                 <div className="w-1/2">
                   <label htmlFor="business_zip" className="block text-sm font-semibold text-gray-700">
                     ZIP<span className="text-red-500">*</span>
@@ -348,6 +398,7 @@ const Register: React.FC = () => {
                 </div>
               </div>
 
+              {/* Business Phone Field with Input Mask */}
               <div>
                 <label htmlFor="business_phone" className="block text-sm font-semibold text-gray-700">
                   Business Phone<span className="text-red-500">*</span>
@@ -376,7 +427,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
-
+              {/* U.S. Tax ID (EIN) Field */}
               <div>
                 <label htmlFor="license_number" className="block text-sm font-semibold text-gray-700">
                   U.S. Tax ID (EIN)<span className="text-red-500">*</span>
@@ -396,6 +447,7 @@ const Register: React.FC = () => {
                 )}
               </div>
 
+              {/* Submit Button */}
               <div>
                 <button
                   type="submit"
@@ -409,6 +461,7 @@ const Register: React.FC = () => {
           )}
         </div>
 
+        {/* Illustration/Image Section */}
         <div className="w-full lg:w-1/2 hidden lg:block">
           <img
             src="https://www.shutterstock.com/image-photo/beer-mug-splashes-foam-isolated-600nw-650618740.jpg"
@@ -418,6 +471,7 @@ const Register: React.FC = () => {
         </div>
       </div>
 
+      {/* Success Popup */}
       {showPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-lg">
