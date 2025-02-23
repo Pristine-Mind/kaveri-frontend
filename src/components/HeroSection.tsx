@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import hero from '../assets/banner.png';
-import offerImage from '../assets/offer-new.jpeg';
+// import offerImage from '../assets/offer-new.jpeg';
 import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
   const [showModal, setShowModal] = useState(true);
   const navigate = useNavigate();
   
-  const closeModal = () => {
-    setShowModal(false);
-  };
+  // const closeModal = () => {
+  //   setShowModal(false);
+  // };
 
   return (
     <div style={styles.heroSection}>
@@ -29,7 +29,7 @@ const HeroSection: React.FC = () => {
         </div>
       </div>
 
-      {showModal && (
+      {/* {showModal && (
         <div style={styles.modal}>
           <div style={styles.modalContent}>
             <span style={styles.closeButton} onClick={closeModal}>&times;</span>
@@ -40,7 +40,7 @@ const HeroSection: React.FC = () => {
             />
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
